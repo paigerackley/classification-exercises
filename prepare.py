@@ -25,7 +25,7 @@ def split_iris_data(df_iris):
     '''
     
     # splits df into train_validate and test using train_test_split() stratifying on species to get an even mix of each species
-    train_validate, test = train_test_split(df_iris, test_size=.2, random_state=123, stratify=df.species)
+    train_validate, test = train_test_split(df_iris, test_size=.2, random_state=123, stratify=df_iris.species)
     
     # splits train_validate into train and validate using train_test_split() stratifying on species to get an even mix of each species
     train, validate = train_test_split(train_validate, 
