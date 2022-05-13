@@ -6,22 +6,15 @@ from sklearn.impute import SimpleImputer
 
 # ------------------- IRIS DATA -------------------
 
-def clean_iris(df):
-
-    '''Prepares acquired Iris data for exploration'''
-    
-    # drop column using .drop(columns=column_name)
-    df = df.drop(columns='species_id')
-    
-    # remame column using .rename(columns={current_column_name : replacement_column_name})
-    df = df.rename(columns={'species_name':'species'})
-    
-    # create dummies dataframe using .get_dummies(column_name,not dropping any of the dummy columns)
-    dummy_df = pd.get_dummies(df['species'], drop_first=False)
-    
-    # join original df with dummies df using .concat([original_df,dummy_df], join along the index)
-    df = pd.concat([df, dummy_df], axis=1)
-    
+def prep_iris(df):
+    #drop id columns:
+    df.drop(inplace=True,columns=['species_id','measurement_id'])
+    #rename species column:
+    df.rename(columns={"species_name":"species"},inplace=True)
+    #encode species:
+    iris_df = pd.get_dummies(df[['species']],drop_first=True)
+    #concat to dataframe
+    df = pd.concat([df,iris_df],axis=1)
     return df
 
 
@@ -42,25 +35,6 @@ def split_iris_data(df):
     return train, validate, test
 
 
-def prep_iris(df):
-    '''Prepares acquired Iris data for exploration'''
-    
-    # drop column using .drop(columns=column_name)
-    df = df.drop(columns='species_id')
-    
-    # remame column using .rename(columns={current_column_name : replacement_column_name})
-    df = df.rename(columns={'species_name':'species'})
-    
-    # create dummies dataframe using .get_dummies(column_name,not dropping any of the dummy columns)
-    dummy_df = pd.get_dummies(df['species'], drop_first=False)
-    
-    # join original df with dummies df using .concat([original_df,dummy_df], join along the index)
-    df = pd.concat([df, dummy_df], axis=1)
-    
-    # split data into train/validate/test using split_data function
-    train, validate, test = split_iris_data(df)
-    
-    return train, validate, test
 
 # ------------------- TITANIC DATA -------------------
 
