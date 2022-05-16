@@ -10,11 +10,12 @@ def prep_iris(df_iris):
     #drop id columns:
     df_iris.drop(inplace=True,columns=['species_id','measurement_id'])
     #rename species column:
-    df_iris.rename(columns={"species_name":"species"},inplace=True)
+    df_iris.rename(columns={'species_name':'species'},inplace=True)
     #encode species:
-    iris_df = pd.get_dummies(df_iris[['species']],drop_first=True)
+    iris_df = pd.get_dummies(df_iris['species'], drop_first=False)
     #concat to dataframe
-    df_iris = pd.concat([df_iris,iris_df],axis=1)
+    df_iris = pd.concat([df_iris, iris_df], axis=1)
+
     return df_iris
 
 
@@ -23,12 +24,11 @@ def split_iris_data(df_iris):
     take in a DataFrame and return train, validate, and test DataFrames; stratify on species.
     return train, validate, test DataFrames.
     '''
-    
     # splits df into train_validate and test using train_test_split() stratifying on species to get an even mix of each species
     train_validate, test = train_test_split(df_iris, test_size=.2, random_state=123, stratify=df_iris.species)
     
     # splits train_validate into train and validate using train_test_split() stratifying on species to get an even mix of each species
-    train, validate = train_test_split(train_validate, 
+    train, validate  = train_test_split(train_validate, 
                                        test_size=.3, 
                                        random_state=123, 
                                        stratify=train_validate.species)
