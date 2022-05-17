@@ -38,24 +38,22 @@ def split_iris_data(df_iris):
 
 # ------------------- TITANIC DATA -------------------
 
+#Titanic
 def clean_titanic_data(df):
     '''
     This function will clean the data prior to splitting.
     '''
     # Drops any duplicate values
     df = df.drop_duplicates()
-
-    # Drops columns that are already represented by other columns
-    cols_to_drop = ['deck', 'embarked', 'class']
-    df = df.drop(columns=cols_to_drop)
-
+    
     # Fills the small number of null values for embark_town with the mode
     df['embark_town'] = df.embark_town.fillna(value='Southampton')
 
     # Uses one-hot encoding to create dummies of string columns for future modeling 
     dummy_df = pd.get_dummies(df[['sex', 'embark_town']], dummy_na=False, drop_first=[True, True])
     df = pd.concat([df, dummy_df], axis=1)
-
+    cols_to_drop = ['deck', 'embarked', 'class', 'sex', 'embark_town']
+    df = df.drop(columns=cols_to_drop)
     return df
 
 def split_titanic_data(df):
@@ -101,6 +99,8 @@ def impute_mean_age(train, validate, test):
     
     return train, validate, test
 
+
+## USE THIS THE MOST ## 
 def prep_titanic_data(df):
     '''
     Combines the clean_titanic_data, split_titanic_data, and impute_mean_age functions.
