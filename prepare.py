@@ -122,15 +122,14 @@ def split_telco_data(df):
     '''
     train_validate, test = train_test_split(df, test_size=.2, 
                                         random_state=123, 
-                                        stratify=df.churn)
+                                        stratify=df.churn_encoded)
     train, validate = train_test_split(train_validate, test_size=.3, 
                                    random_state=123, 
-                                   stratify=train_validate.churn)
+                                   stratify=train_validate.churn_encoded)
     return train, validate, test
 
 def prep_telco_data(df):
-    # Drop duplicate columns
-    df.drop(columns=['payment_type_id', 'internet_service_type_id', 'contract_type_id', 'customer_id'], inplace=True)
+
        
     # Drop null values stored as whitespace    
     df['total_charges'] = df['total_charges'].str.strip()
@@ -147,6 +146,7 @@ def prep_telco_data(df):
     df['paperless_billing_encoded'] = df.paperless_billing.map({'Yes': 1, 'No': 0})
     df['churn_encoded'] = df.churn.map({'Yes': 1, 'No': 0})
     
+    
     # Get dummies for non-binary categorical variables
     dummy_df = pd.get_dummies(df[['multiple_lines', \
                               'online_security', \
@@ -159,10 +159,17 @@ def prep_telco_data(df):
                               'internet_service_type', \
                               'payment_type']], dummy_na=False, \
                               drop_first=True)
+
     
     # Concatenate dummy dataframe to original 
     df = pd.concat([df, dummy_df], axis=1)
-    
+
+     # Drop duplicate columns
+    df.drop(columns=['payment_type_id', 'internet_service_type_id', 'contract_type_id', 'customer_id', 'gender', 'partner',
+    'dependents', 'phone_service', 'multiple_lines', 'online_security', 'online_backup', 'device_protection', 'tech_support',
+     'streaming_tv', 'streaming_movies', 'paperless_billing', 'churn', 'contract_type', 'internet_service_type',
+     'payment_type'], inplace=True)   
+
     # split the data
     train, validate, test = split_telco_data(df)
     
